@@ -1,41 +1,20 @@
-// Import necessary modules
-const express = require('express');
-const { AuthClientTwoLegged } = require('forge-apis'); // Autodesk Forge SDK (APS SDK)
+require('dotenv').config();
 
-const app = express();
-
-// Get APS credentials from environment variables
-const APS_CLIENT_ID = process.env.APS_CLIENT_ID;
-const APS_CLIENT_SECRET = process.env.APS_CLIENT_SECRET;
-const APS_CALLBACK_URL = process.env.APS_CALLBACK_URL;
-
-// Verify that all required environment variables are set
-if (!APS_CLIENT_ID || !APS_CLIENT_SECRET || !APS_CALLBACK_URL) {
-    console.error("ERROR: Missing APS environment variables.");
-    process.exit(1); // Exit the app if required environment variables are missing
+let { APS_CLIENT_ID, APS_CLIENT_SECRET, APS_CALLBACK_URL, SERVER_SESSION_SECRET, PORT } = process.env;
+if (!APS_CLIENT_ID || !APS_CLIENT_SECRET || !APS_CALLBACK_URL || !SERVER_SESSION_SECRET) {
+    console.warn('Missing some of the environment variables.');
+    process.exit(1);
 }
+const INTERNAL_TOKEN_SCOPES = ['data:read'];
+const PUBLIC_TOKEN_SCOPES = ['viewables:read'];
+PORT = PORT || 8080;
 
-// Configure APS Authentication
-const authClient = new AuthClientTwoLegged(APS_CLIENT_ID, APS_CLIENT_SECRET, [
-    'data:read',
-    'data:write'
-], true);
-
-// Example route that uses APS Authentication
-app.get('/api/authenticate', async (req, res) => {
-    try {
-        const credentials = await authClient.authenticate();
-        res.json({
-            access_token: credentials.access_token,
-            expires_in: credentials.expires_in
-        });
-    } catch (error) {
-        console.error("Authentication failed:", error);
-        res.status(500).json({ error: "Authentication failed" });
-    }
-});
-
-// Start the server
-app.listen(3000, () => {
-    console.log('Server running on http://localhost:3000');
-});
+module.exports = {
+    APS_CLIENT_ID,
+    APS_CLIENT_SECRET,
+    APS_CALLBACK_URL,
+    SERVER_SESSION_SECRET,
+    INTERNAL_TOKEN_SCOPES,
+    PUBLIC_TOKEN_SCOPES,
+    PORT
+};
