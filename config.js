@@ -7,10 +7,8 @@ if (!APS_CLIENT_ID || !APS_CLIENT_SECRET || !APS_CALLBACK_URL || !SERVER_SESSION
 }
 const INTERNAL_TOKEN_SCOPES = ['data:read'];
 const PUBLIC_TOKEN_SCOPES = ['viewables:read'];
-const port = process.env.PORT || 8080;
-app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
-});
+const port = PORT || 8080;
+
 
 
 module.exports = {
