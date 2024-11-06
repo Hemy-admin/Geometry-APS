@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - Geometry
+name: Build and deploy Node.js app to Azure Web App - geometry
 
 on:
   push:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v4
@@ -26,15 +26,12 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-
-      - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
-
+      
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: release.zip
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
@@ -50,22 +47,19 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: node-app
-
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
       
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_72DE1D25CCFC4F349B38061ACB964C0F }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_515670688DE84E21AC1A9766B11DBEFA }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B8D10A22A8A249EC8B5D853DFE253F4B }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5738167BF4D44791BE4772C3E90E2E9F }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_6320E2792A3D41D0876D0E4E5F8C3C0A }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_9C8FFEB1A9584312929C92623FB14FB2 }}
 
       - name: 'Deploy to Azure Web App'
-        id: deploy-to-webapp
         uses: azure/webapps-deploy@v3
+        id: deploy-to-webapp
         with:
-          app-name: 'Geometry'
+          app-name: 'geometry'
           slot-name: 'Production'
           package: .
           
